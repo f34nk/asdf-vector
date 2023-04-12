@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for vector.
-GITHUB_REPO="https://github.com/vectordotdev/vector"
+GH_REPO="https://github.com/vectordotdev/vector"
 PACKAGES_URL="https://packages.timber.io/vector"
 TOOL_NAME="vector"
 TOOL_TEST="vector --help"
@@ -26,7 +26,7 @@ sort_versions() {
 }
 
 list_github_tags() {
-	git ls-remote --tags --refs "${GITHUB_REPO}" |
+	git ls-remote --tags --refs "${GH_REPO}" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
 		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
 }
