@@ -3,7 +3,8 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for vector.
-GH_REPO="https://vector.dev"
+GITHUB_REPO="https://github.com/vectordotdev/vector"
+PACKAGES_URL="https://packages.timber.io/vector"
 TOOL_NAME="vector"
 TOOL_TEST="vector --help"
 
@@ -12,7 +13,7 @@ fail() {
 	exit 1
 }
 
-curl_opts=(-fsSL)
+curl_opts=(-sSfL --proto '=https' --tlsv1.2)
 
 # NOTE: You might want to remove this if vector is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
@@ -25,13 +26,13 @@ sort_versions() {
 }
 
 list_github_tags() {
-	git ls-remote --tags --refs "$GH_REPO" |
+	git ls-remote --tags --refs "${GITHUB_REPO}" |
 		grep -o 'refs/tags/.*' | cut -d/ -f3- |
 		sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
+	# TODO: DONE Adapt this. By default we simply list the tag names from GitHub releases.
 	# Change this function if vector has other means of determining installable versions.
 	list_github_tags
 }
@@ -41,8 +42,10 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for vector
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	platform="x86_64-apple-darwin"
+
+	# TODO: DONE Adapt the release URL convention for vector
+	url="${PACKAGES_URL}/${version}/vector-${version}-${platform}.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
