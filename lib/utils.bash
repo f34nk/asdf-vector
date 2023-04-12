@@ -48,6 +48,7 @@ download_release() {
 	url="${PACKAGES_URL}/${version}/vector-${version}-${platform}.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
+
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
@@ -62,9 +63,9 @@ install_version() {
 
 	(
 		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		cp -r "$ASDF_DOWNLOAD_PATH"/*/bin/* "$install_path"
 
-		# TODO: Assert vector executable exists.
+		# TODO: DONE Assert vector executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
